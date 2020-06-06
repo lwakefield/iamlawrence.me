@@ -32,3 +32,16 @@ p {
 pre {
     overflow: scroll;
 }
+
+img {
+    max-width: 100%;
+}
+
+pre {
+    background: #eeeeee;
+    padding: 1rem;
+}
+code {
+    font-size: 1rem;
+    background: #eeeeee;
+}
