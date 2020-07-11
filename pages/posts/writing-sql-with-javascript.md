@@ -34,3 +34,42 @@ function math (strings, ...vals) {
 console.log(math`sum: ${1} + ${2} = ${3}`);
 // 'sum: one + two = three'
 ```
+
+Kinda a weird example - but demonstrates the point.
+
+Anyway, here is the "one weird trick" that will allow you to write raw SQL fearlessly:
+
+
+```
+const client = knex(); // we use knex, but this can be adapted to any driver
+
+function query (sql, ...bindings) {
+  return client.raw(sql.join('?'), bindings);
+}
+
+const username = 'alice';
+await query`select * from users where username=${username}`;
+```
+
+We can get craftier, and get it to play nice with transactions too:
+
+```
+function transaction () {
+  const { raw, commit, rollback } = client.transaction();
+  function query (sql, ...bindings) {
+    return trx.raw(sql.join('?'), bindings);
+  }
+  return { query, commit, rollback };
+}
+
+const trx = transaction();
+try {
+  await trx.query(`insert into messages values (${msg})`);
+  await trx.query(`insert into messages values (${msg})`);
+  await trx.commit();
+} catch (e) {
+  await trx.rollback();
+}
+```
+
+No doubt, this isn't the only cheeky usage of tagged template literals. Go forth, write SQL freely unencumbered by fear of injection vulnerabilities.
