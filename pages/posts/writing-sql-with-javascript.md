@@ -3,7 +3,7 @@ published: 2020/07/11
 
 ---
 
-The more queries I have written, the more I tend to believe that writing _raw_ SQL should be the preferred way of interacting with SQL databases in application-land. I like to understand what my code does and how my query will interact with the database. Both query-builders and ORMs abstract that away, and remove the control you have over the query. It also requires learning a new DSL (read API) which eventually maps to SQL.
+The more database queries I have written I write in application-land, the more I prefer writing _raw_ SQL. I like the simplicity the explicitness. Both query-builders and ORMs abstract that away, and remove the control you have over the query. It also requires learning a new DSL (read API) which eventually maps to SQL, so you end up needing to know two times as many APIs as well as learning how they interact with one another.
 
 My biggest gripe with writing raw SQL, is that it the binding syntax is cumbersome and it opens the door for possible injection vulnerabilities.
 
@@ -14,7 +14,7 @@ pg.query(`select * from users where username=${username}`);
 
 Since ES2015, JavaScript introduced ["Template String Literals"](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals), which are probably best known for their pretty interpolation syntax: ``console.log(`hello my name is ${name}`)``.
 
-What is less frequently used is ["Tagged Template String Literals"](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#Tagged_templates) - where you can use a function to provide custom interpolation logic.
+What is less frequently used is ["Tagged Template String Literals"](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#Tagged_templates) - where allow you to define a function to provide custom interpolation logic.
 
 ```
 function math (strings, ...vals) {
@@ -38,7 +38,6 @@ console.log(math`sum: ${1} + ${2} = ${3}`);
 Kinda a weird example - but demonstrates the point.
 
 Anyway, here is the "one weird trick" that will allow you to write raw SQL fearlessly:
-
 
 ```
 const client = knex(); // we use knex, but this can be adapted to any driver
