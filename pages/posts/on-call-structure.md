@@ -18,10 +18,12 @@ There shall be two engineers (for redundancy) on-call at any one time.
 One engineer is considered the "primary", while the other engineer is
 considered the "secondary". An example roster looks like this:
 
+```
 Alice: | primary   | secondary |           |           | primary   |
 Bob:   |           | primary   | secondary |           |           |
 Carol: |           |           | primary   | secondary |           |
 Dan:   | secondary |           |           | primary   | secondary |
+```
 
 Responsibilities
 ================
@@ -96,21 +98,27 @@ FAQ
 ===
 
 **Q: What if I have plans that interfere for a few hours of on-call?**
+
 A: It's your responsibility to find another engineer to cover that time for
 you. You can add overrides into PagerDuty.
 
 **Q: What if I have plans that interfere with a shift of on-call?**
+
 A: It's your responsibility to find another engineer who will be willing to
 trade shifts with you.
 
 **Q: What if I am sick and don't feel like I can respond appropriately?**
+
 A: Get someone to cover.
 
 **Q: Does this mean I need to abstain from over-indulging?**
+
 A: Yes.
 
 **Q: Do I need to carry my laptop with me everywhere?**
+
 A: Yes.
 
 **Q: What if I am caught without internet?**
-A: Wonder will provide you with a wireless hotspot.
+
+A: We will provide you with a wireless hotspot.
