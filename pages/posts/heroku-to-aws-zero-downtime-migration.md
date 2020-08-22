@@ -27,4 +27,14 @@ So without further a do, let's introduce what we were working with:
 
 We have: four domain names some going through fastly, three applications and two databases. There was also a message queue (SQS) and Redis cluster included in the infra, but were omitted from the diagram for simplicity sake (they were not part of the critical path during the migration).
 
-[0] https://stackoverflow.com/a/45229837
+The infra topology is not that complicated in itself, but that did not mean the migration would not be complicated. Here is a photo of the whiteboard after our first "how the hell are we going to do this" meeting:
+
+![IMG_20191210_130258(1)](https://user-images.githubusercontent.com/5688923/90965315-fe3e2600-e494-11ea-9d5e-413bbd692f2d.jpg)
+
+We had a rough understanding of what was going to need to happen, but there were an awful lot of "we don't know what problems we will encounter here". The gist of it was this:
+
+1. Get our API running on AWS. It will be connected to our production databases, and exposed publicly. BUT it does not need to be running the latest application code. No traffic will be routed to this API. This is to uncover problems, help us fail fast and either prove to ourselves that we can do this, OR that it isn't a good idea.
+
+2. Start deploying to AWS. We should do this at the same time which we deploy to Heroku. The goal is to get AWS and Heroku in sync. At this stage, AWS is still not receiving traffic.
+
+3. Split traffic between AWS and Heroku. This is where we start sending real traffic to AWS. See Fastly in the infra diagram above? This is where she comes into play. We want to slowly direct more and more traffic to AWS until a point where we can simply turn off Heroku.
