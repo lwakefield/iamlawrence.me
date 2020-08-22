@@ -3,7 +3,7 @@ published: TBD
 
 ---
 
-This is a story about I migrated a business from Heroku to AWS.
+This is a story about how I migrated a business from Heroku to AWS.
 
 First off, I want to address the why. The team had been throwing around the idea of migrating off of Heroku for some time. There were three factors that led to us biting the bullet and migrating from Heroku to AWS: stability, performance and cost.
 
