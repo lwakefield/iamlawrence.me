@@ -38,3 +38,9 @@ We had a rough understanding of what was going to need to happen, but there were
 2. Start deploying to AWS. We should do this at the same time which we deploy to Heroku. The goal is to get AWS and Heroku in sync. At this stage, AWS is still not receiving traffic.
 
 3. Split traffic between AWS and Heroku. This is where we start sending real traffic to AWS. See Fastly in the infra diagram above? This is where she comes into play. We want to slowly direct more and more traffic to AWS until a point where we can simply turn off Heroku.
+
+4. While rolling out - monitor, evaluate, monitor, evaluate! If we aren't hitting goals, then we need to rethink our approach. We should be honest about if it isn't working, ready to change our approach and in the worst case - rollback the project.
+
+5. Rinse and repeat for the remaining projects and components. This includes workers, scheduled jobs, client application and frontend application. If we have moved API succesfully, then we should feel confident moving these across in a fraction of the time.
+
+What I like about the approach is 1) we are attempting the hardest parts first and 2) we are factoring failure into the process. Both are derived from the same principle "de-risk, de-risk, de-risk". If we do the easy parts first, we lull ourselves into a false sense of security. We don't want to end up in the situation where the first 90% of code accounts for the first 90% of dev time, and the last 10% of code accounts for the other 90% of dev time. There are unknowns in every project, but it is especially true in this project and if we are going to fail, we want to do it fast, so that we have time to try another approach or deem the project "not worth it".
