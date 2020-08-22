@@ -21,4 +21,10 @@ Our Heroku application was becoming expensive. We were running 3-5x PM (2.5GiB R
 
 None of the three factors detailed above were enough to justify the migration alone, but all together, they built a strong enough case to take the plunge.
 
+So without further a do, let's introduce what we were working with:
+
+![Untitled-2020-08-21-1359(2)](https://user-images.githubusercontent.com/5688923/90965212-2bd69f80-e494-11ea-8520-4e3389241f15.png)
+
+We have: four domain names some going through fastly, three applications and two databases. There was also a message queue (SQS) and Redis cluster included in the infra, but were omitted from the diagram for simplicity sake (they were not part of the critical path during the migration).
+
 [0] https://stackoverflow.com/a/45229837
