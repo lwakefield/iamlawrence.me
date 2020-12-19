@@ -3,7 +3,9 @@ published: 2020/12/19
 
 ---
 
-Find all of my solutions [here](https://github.com/lwakefield/advent-of-code/tree/master/2020). 
+I started writing a journal of how I solved each day of Advent of Code in a work Slack channel, but thought it might be nice to put here as well!
+
+Learn about what [Advent of Code is here](https://adventofcode.com/2020/about). Find all of my solutions [here](https://github.com/lwakefield/advent-of-code/tree/master/2020). 
 
 ## Day 01
 
