@@ -143,3 +143,97 @@ puts differentials[1] * differentials[3]
 ```
 
 I should have finished reading the question, which would have served as a hint that a recursive solution that returns all chains in memory, won't work (without a big enough computer at least).
+
+![Screenshot from 2020-12-10 06-51-32](https://user-images.githubusercontent.com/5688923/102698322-7d0c5b00-420a-11eb-822a-338c6517d9e1.png)
+![Screenshot from 2020-12-10 06-50-24](https://user-images.githubusercontent.com/5688923/102698323-7d0c5b00-420a-11eb-9292-d902bf118659.png)
+
+It ended up not being so bad: graphs and some caching, ended up with a sub millisecond runtime
+
+## Day 11
+
+I think I slowed myself down by re-using a grid class that I had previously written.
+Conceptually part 1 and 2 were fine, but the code was kind of cumbersome to write with lots of places for bugs.
+
+I wasn't satisfied with my original implementation, so I rewrote it without reusing `grid.cr`. Ultimately it came out to less LoC which was satisfying!
+Ruby/Crystal wrap around indexing (`arr[-1] # last val`) is nice, but I wish there was also a function that would return or raise when the index was out of bounds.
+Also fun note: semi colons can still be used to delimit statements in ruby allowing you to write `x += dx; y += dy` which I find a little easier to read than spreading it over two lines. Dunno if I would advise doing that in a shared codebase, but it felt right in a personal codebase.
+
+## Day 12
+
+It took me a while to commit to an implementation for the `rotate` function. I needed to brush up on trig if I wanted to do it completely, but as I started reading, I realized it would be easier to handle the 3/6 cases that existed (which I proved by `grep 'L|R' day_12.txt | sort -u`).
+Here is the real kicker though. For part 1, I had somehow flipped both N/S and the L/R directions (what a dummy), which apparently resulted in a correct answer for part 1. However when I went onto part 2, I kept on getting an integer overflow and it took me a while to trace down the error.
+In the end part 2 was a very minor modification of part 1, only two lines needed changing.
+
+## Day 13
+
+hrmmm - well part 1 was fine.
+Part 2 I identified as a "combination breaking" problem. Brute forcing isn't an option, so I came up with (what I thought was smart) a code cracking algorithm like what you see in hacker movies, where it finds the first part of the combination, then the second and so on.
+Not fast enough though, so I need to rethink what is going on here...
+
+I think I overcomplicated the problem, confused myself and wrote bad code in the end.
+I rewrote it with the same approach and got an answer <1ms.
+
+## Day 14
+
+I spent most of the time juggling data types: int -> binary -> string and back again.
+I reckon I could tidy up my code and shave off maybe ~20 lines. But in the end, it worked!
+I used a recursive solution to expand the "floating" addresses, which I think is actually fine because there will be `O(2^n)` iterations anyway, though it might take less memory doing it iteratively...
+
+## Day 15
+
+Data type choices matter!
+I went with an array-based approach for part 1 and I was using `rindex` which does a search under the hood. Worked well for part 1, but part 2 it was no longer reasonable.
+I switched to using hashmaps to store index locations in part 2 and ended up with a ~10s runtime. Not the fastest, but not worth the extra programming time to improve that...
+
+## Day 16
+
+The implementation was kind of fiddly, but not that tricky!
+I was worried that part 2 was going to be harder than it ended up being. Every rule ended up having a very obvious destination. Since there were only 20 of them, I figured it would take ~2m to hard code and ~5m to program, so I opted to hard code it.
+
+## Day 17
+
+I made a choice early on, to only track active values hoping it wouldn't be an issue in part 2. This made it much easier to calculate the bounds which we are working with. The bounds calculation is slow (`o(n)` when it could be `o(1)`, but didn't cause me any issues.
+I ran into a bug which proved difficult to track down. It ended up being [this](https://github.com/lwakefield/advent-of-code/blob/master/2020/day_17.cr#L26) condition in the neighbors function.
+Once part 1 was working, I editted the code to add an extra dimension and re-ran. It seemed fast enough (I have to wait for compile times anyway) for the 4d case.
+Fun problem! Relatively straight forward, but lots of locations for bugs to trip you up.
+
+## Day 18
+
+I didn't get time to work on this yesterday, but I am glad that was the case. It turned out to be trickier than I expected.
+My implementation was a rube-goldberg mess, but it did give me the answer.
+However part 2, was even worse. So I broke out my ["Writing an Interpreter in Go"](https://interpreterbook.com/) book for instruction on how to write a pratt-parser. Took me a while to grok the algorithm again, but implementation wasn't so bad in the end. I might be able to condense the solution a little, but overall I am pleased with the code  and reckon it is fairly easy to follow.
+[Final implementation here]( https://github.com/lwakefield/advent-of-code/blob/master/2020/day_18.cr). You can check the commit history for part 1, but  it is nothing to be proud of...
+
+## Day 19
+
+Pretty pleased with how quickly I solved this one after day 18...
+First I built up a tree of nodes for each of the rules. I started to think about writing a matching algorithm, but then realized that we might be able to convert it to regex and leverage that matching algorithm (which is surely better than any I can write). Lo and behold, it worked and gave me the answer for part 1!
+For part 2, I went back to the idea of writing a matching function. But the instructions seemed to indicate that there was a trick here... So I looked at the two rules and identified two patterns, one of them is the equivalent of `/a+/` while the other is equivalent to `/ab|aabb|aaabbb|aaaabbbb|.../`. I did some sanity checking to make that there was no relation between the two rules that would cause problem and was pleased to find no relation.
+So I set about injecting those two rules into the regex from part 1. For the `/a+/` rule, this wasn't too difficult. But for the other rule, I couldn't think of a way to implement that in regex, so I did something silly and hard coded it.
+
+```
+"(#{x}#{y}|#{x*2}#{y*2}|#{x*3}#{y*3})"
+```
+
+The algorithm worked, but wasn't sure about the correctness, so I extended it one more:
+
+```
+"(#{x}#{y}|#{x*2}#{y*2}|#{x*3}#{y*3}|#{x*4}#{y*4})"
+```
+
+The answer changed. So I figured "I'll just keep extending until the answer stops changing". However:
+
+```
+Unhandled exception: regular expression is too large at 23345 (ArgumentError)
+  from ../../../../../usr/share/crystal/src/regex.cr:257:5 in 'initialize'
+  from ../../../../../usr/share/crystal/src/regex.cr:251:3 in 'new'
+  from day_19.cr:37:5 in 'to_rgx'
+  from day_19.cr:77:1 in '__crystal_main'
+  from ../../../../../usr/share/crystal/src/crystal/main.cr:105:5 in 'main_user_code'
+  from ../../../../../usr/share/crystal/src/crystal/main.cr:91:7 in 'main'
+  from ../../../../../usr/share/crystal/src/crystal/main.cr:114:3 in 'main'
+  from __libc_start_main
+  from _start
+```
+
+Bummer. So I punched in the previous answer in hopes that it would be correct... and it was. My lucky day.
