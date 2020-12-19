@@ -65,7 +65,7 @@ The `not_nil!` statements are to force the typechecker to understand they cannot
 
 I started off using [ranges](https://crystal-lang.org/reference/syntax_and_semantics/literals/range.html) to represent the row/col ranges which looks good syntactically, but ended up being harder to work with. So I switched to regular ol' min/max variables.
 I got a little tripped on the +/- offset when doing the BSP but the test cases made it pretty clear what needed to happen.
-I did not add validation on the row_start == row_end, so I suppose if the dataset was messier that would have cost me.
+I did not add validation on the `row_start == row_end,` so I suppose if the dataset was messier that would have cost me.
 And for part 2, I thought the algorithmic solution was going to be a little fiddly. So instead, I printed the seats to screen and solved graphically.
 Anyway, [good fun](https://github.com/lwakefield/advent-of-code/blob/master/2020/day_05.cr)! The solution was clear to me, but there were enough "gotchas" and design decisions along the way to make it an interesting problem.
 
